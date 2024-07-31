@@ -1,3 +1,4 @@
+import dataclasses
 import atexit
 import inspect
 import shutil
@@ -32,6 +33,8 @@ def delete_on_exit(context_dir: str) -> None:
 
 
 sym_counter = 0
+
+Decorator = Callable[[Callable], Callable]
 
 
 def gensym(name="op"):
@@ -194,13 +197,40 @@ class Plan:
 
         return dag
 
+    def _compile_blockwise(self, dag, jit_function: Decorator) -> nx.MultiDiGraph:
+        """JIT-compiles the functions from all blockwise ops by mutating the input dag."""
+        # Recommended: make a copy of the dag before calling this function.
+        for n in dag.nodes:
+            node = dag.nodes[n]
+
+            if "primitive_op" not in node:
+                continue
+
+            if not isinstance(node["pipeline"].config, BlockwiseSpec):
+                continue
+
+            # node is a blockwise primitive_op.
+            # maybe we should investigate some sort of optics library for frozen dataclasses...
+            new_pipeline = dataclasses.replace(
+                node["pipeline"],
+                config=dataclasses.replace(
+                    node["pipeline"].config,
+                    function=jit_function(node["pipeline"].config.function)
+                )
+            )
+            node["pipeline"] = new_pipeline
+
+        return dag
+
     @lru_cache
     def _finalize_dag(
-        self, optimize_graph: bool = True, optimize_function=None
+        self, optimize_graph: bool = True, optimize_function=None, jit_function: Optional[Decorator] = None,
     ) -> nx.MultiDiGraph:
         dag = self.optimize(optimize_function).dag if optimize_graph else self.dag
         # create a copy since _create_lazy_zarr_arrays mutates the dag
         dag = dag.copy()
+        if callable(jit_function):
+            dag = self._compile_blockwise(dag, jit_function)
         dag = self._create_lazy_zarr_arrays(dag)
         return nx.freeze(dag)
 
@@ -210,11 +240,12 @@ class Plan:
         callbacks=None,
         optimize_graph=True,
         optimize_function=None,
+        jit_function=None,
         resume=None,
         spec=None,
         **kwargs,
     ):
-        dag = self._finalize_dag(optimize_graph, optimize_function)
+        dag = self._finalize_dag(optimize_graph, optimize_function, jit_function)
 
         compute_id = f"compute-{datetime.now().strftime('%Y%m%dT%H%M%S.%f')}"
 

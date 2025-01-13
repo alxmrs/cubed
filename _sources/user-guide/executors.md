@@ -6,10 +6,13 @@ Cubed provides a variety of executors for running the tasks in a computation, wh
 
 ## Local single-machine executors
 
-If you don't specify an executor then the local in-process single-threaded Python executor is used. This is a very simple executor (called `single-threaded`) that is intended for testing on small amounts of data before running larger computations using the `processes` executor on a single machine, or a distributed executor in the cloud.
+If you don't specify an executor then the local in-process multi-threaded Python executor is used by default. This is called the `threads` executor. It doesn't require any set up so it is useful for quickly getting started and running on datasets that don't fit in memory, but that can fit on a single machine's disk.
 
-The `processes` executor runs on a single machine, and uses all the cores on the machine. It doesn't require any set up so it is useful for quickly getting started and running on datasets that don't fit in memory, but can fit on a single machine's disk.
+The `processes` executor also runs on a single machine, and uses all the cores on the machine. However, unlike the `threads` executor, each task runs in a separate process, which avoids GIL contention, but adds some overhead in process startup time and communication. Typically, running using `processes` is more performant than `threads`, but it is worth trying both on your workload to see which is best.
 
+There is a third local executor called `single-threaded` that runs tasks sequentially in a single thread, and is intended for testing on small amounts of data.
+
+(which-cloud-service)=
 ## Which cloud service executor should I use?
 
 When it comes to scaling out, there are a number of executors that work in the cloud.
@@ -37,4 +40,4 @@ spec = cubed.Spec(
 )
 ```
 
-A default spec may also be configured using a YAML file. The [examples](https://github.com/cubed-dev/cubed/blob/main/examples/README.md) show this in more detail for all of the executors described above.
+A default spec may also be configured using a YAML file. The [examples](#cloud-set-up) show this in more detail for all of the executors described above.

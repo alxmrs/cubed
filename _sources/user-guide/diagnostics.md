@@ -5,7 +5,7 @@ Cubed provides a variety of tools to understand a computation before running it,
 To use these features ensure that the optional dependencies for diagnostics have been installed:
 
 ```shell
-python -m pip install "cubed[diagnostics]"
+pip install "cubed[diagnostics]"
 ```
 
 ## Visualize the computation plan
@@ -91,7 +91,7 @@ The timeline callback will write a graphic `timeline.svg` to a directory with th
 ```
 
 ### Examples in use
-See the [examples](https://github.com/cubed-dev/cubed/blob/main/examples/README.md) for more information about how to use them.
+See the [examples](../examples/index.md) for more information about how to use them.
 
 ## Memray
 

@@ -16,37 +16,45 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
 
-  
-  <link href="_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
-
-    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=a3416100" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-design.min.css?v=95c83b7e" />
   
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
-  <script src="_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
 
-    <script src="_static/documentation_options.js?v=1a1d267f"></script>
-    <script src="_static/doctools.js?v=9a2dae69"></script>
+    <script src="_static/documentation_options.js?v=dc67c818"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
     <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/scripts/sphinx-book-theme.js?v=887ef09a"></script>
+    <script src="_static/design-tabs.js?v=f930bc37"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'configuration';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="Related Projects" href="related-projects.html" />
+    <link rel="next" title="Why Cubed?" href="why-cubed.html" />
     <link rel="prev" title="Python Array API" href="array-api.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="1ac5061
+" />
   </head>
   
   
@@ -62,19 +70,8 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-primary-sidebar-checkbox"/>
-  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
-  
-  <input type="checkbox"
-          class="sidebar-toggle"
-          id="pst-secondary-sidebar-checkbox"/>
-  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
-  
-  <div class="search-button__wrapper">
-    <div class="search-button__overlay"></div>
-    <div class="search-button__search-container">
+  <dialog id="pst-search-dialog">
+    
 <form class="bd-search d-flex align-items-center"
       action="search.html"
       method="get">
@@ -82,7 +79,6 @@
   <input type="search"
          class="form-control"
          name="q"
-         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -90,8 +86,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form></div>
-  </div>
+</form>
+  </dialog>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -107,7 +103,8 @@
       
       
       
-      <div class="bd-sidebar-primary bd-sidebar">
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -137,36 +134,34 @@
 </a></div>
         <div class="sidebar-primary-item">
 
- <script>
- document.write(`
-   <button class="btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="fa-solid fa-magnifying-glass"></i>
-    <span class="search-button__default-text">Search</span>
-    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
-   </button>
- `);
- </script></div>
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
         <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">For users</span></p>
 <ul class="current nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="getting-started/index.html">Getting Started</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="getting-started/why-cubed.html">Why Cubed?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started/installation.html">Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started/demo.html">Demo</a></li>
-</ul>
-</details></li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="user-guide/index.html">User Guide</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="user-guide/executors.html">Executors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user-guide/storage.html">Storage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user-guide/memory.html">Memory</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user-guide/reliability.html">Reliability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user-guide/optimization.html">Optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user-guide/scaling.html">Scaling</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user-guide/diagnostics.html">Diagnostics</a></li>
 </ul>
 </details></li>
-<li class="toctree-l1"><a class="reference external" href="https://cubed-dev.github.io/cubed/cubed-intro.slides.html">Intro slides</a></li>
-<li class="toctree-l1"><a class="reference external" href="https://github.com/tomwhite/cubed/tree/main/examples/README.md">Examples</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="examples/index.html">Examples</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/how-to-run.html">How to run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/basic-array-ops.html">Basic array operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/zarr.html">Zarr</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/xarray.html">Xarray</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/pangeo.html">Pangeo</a></li>
+</ul>
+</details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="api.html">API Reference</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="generated/cubed.Array.html">cubed.Array</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/cubed.Array.compute.html">cubed.Array.compute</a></li>
@@ -181,6 +176,7 @@
 <li class="toctree-l2"><a class="reference internal" href="generated/cubed.apply_gufunc.html">cubed.apply_gufunc</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/cubed.map_blocks.html">cubed.map_blocks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/cubed.map_overlap.html">cubed.map_overlap</a></li>
+<li class="toctree-l2"><a class="reference internal" href="generated/cubed.rechunk.html">cubed.rechunk</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/cubed.nanmean.html">cubed.nanmean</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/cubed.nansum.html">cubed.nansum</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/cubed.pad.html">cubed.pad</a></li>
@@ -189,17 +185,13 @@
 <li class="toctree-l2"><a class="reference internal" href="generated/cubed.Spec.html">cubed.Spec</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/cubed.TaskEndEvent.html">cubed.TaskEndEvent</a></li>
 <li class="toctree-l2"><a class="reference internal" href="generated/cubed.measure_reserved_mem.html">cubed.measure_reserved_mem</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/cubed.runtime.executors.local.SingleThreadedExecutor.html">cubed.runtime.executors.local.SingleThreadedExecutor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/cubed.runtime.executors.local.ThreadsExecutor.html">cubed.runtime.executors.local.ThreadsExecutor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/cubed.runtime.executors.local.ProcessesExecutor.html">cubed.runtime.executors.local.ProcessesExecutor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/cubed.runtime.executors.beam.BeamExecutor.html">cubed.runtime.executors.beam.BeamExecutor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/cubed.runtime.executors.lithops.LithopsExecutor.html">cubed.runtime.executors.lithops.LithopsExecutor</a></li>
-<li class="toctree-l2"><a class="reference internal" href="generated/cubed.runtime.executors.modal.ModalExecutor.html">cubed.runtime.executors.modal.ModalExecutor</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="array-api.html">Python Array API</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Configuration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="why-cubed.html">Why Cubed?</a></li>
 <li class="toctree-l1"><a class="reference internal" href="related-projects.html">Related Projects</a></li>
+<li class="toctree-l1"><a class="reference internal" href="articles.html">Articles and Presentations</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">For developers</span></p>
 <ul class="nav bd-sidenav">
@@ -215,9 +207,14 @@
   
   
   <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
   </div>
-  
-  <div id="rtd-footer-container"></div>
 
 
       </div>
@@ -314,24 +311,16 @@
 
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
-    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
-    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
-  </button>
-`);
-</script>
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
 
 
-<script>
-document.write(`
-  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-  </button>
-`);
-</script>
+</button>
 <button class="sidebar-toggle secondary-toggle btn btn-sm" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </button>
@@ -357,6 +346,7 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#specification">Specification</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spec-object"><code class="docutils literal notranslate"><span class="pre">Spec</span></code> object</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cubed-config-object"><code class="docutils literal notranslate"><span class="pre">cubed.config</span></code> object</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#yaml-file">YAML file</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-variables">Environment variables</a></li>
 </ul>
@@ -376,6 +366,7 @@ document.write(`
 </li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#debugging">Debugging</a></li>
 </ul>
             </nav>
         </div>
@@ -393,17 +384,18 @@ document.write(`
 <p>This page covers how to specify configuration properties, and a reference with all the configuration options that you can use in Cubed.</p>
 <section id="specification">
 <h2>Specification<a class="headerlink" href="#specification" title="Link to this heading">#</a></h2>
-<p>There are three main ways of specifying configuration in Cubed:</p>
+<p>There are four main ways of specifying configuration in Cubed:</p>
 <ol class="arabic simple">
 <li><p>by instantiating a <code class="docutils literal notranslate"><span class="pre">Spec</span></code> object,</p></li>
+<li><p>by setting values on the <code class="docutils literal notranslate"><span class="pre">config</span></code> object in the <code class="docutils literal notranslate"><span class="pre">cubed</span></code> namespace,</p></li>
 <li><p>by using a YAML file and setting the <code class="docutils literal notranslate"><span class="pre">CUBED_CONFIG</span></code> environment variable, or</p></li>
 <li><p>by setting environment variables for individual properties.</p></li>
 </ol>
 <p>We look at each in turn.</p>
 <section id="spec-object">
 <h3><code class="docutils literal notranslate"><span class="pre">Spec</span></code> object<a class="headerlink" href="#spec-object" title="Link to this heading">#</a></h3>
-<p>This is how you configure Cubed directly from within a Python program - by instantiating a <a class="reference internal" href="generated/cubed.Spec.html#cubed.Spec" title="cubed.Spec"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spec</span></code></a> object:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cubed</span>
+<p>This is the most direct way to configure Cubed directly from within a Python program - by instantiating a <a class="reference internal" href="generated/cubed.Spec.html#cubed.Spec" title="cubed.Spec"><code class="xref py py-class docutils literal notranslate"><span class="pre">Spec</span></code></a> object:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cubed</span>
 
 <span class="n">spec</span> <span class="o">=</span> <span class="n">cubed</span><span class="o">.</span><span class="n">Spec</span><span class="p">(</span>
     <span class="n">work_dir</span><span class="o">=</span><span class="s2">&quot;s3://cubed-tomwhite-temp&quot;</span><span class="p">,</span>
@@ -414,7 +406,7 @@ document.write(`
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">spec</span></code> instance is then passed to array creation functions as follows:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cubed.array_api</span> <span class="k">as</span> <span class="nn">xp</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cubed.array_api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xp</span>
 
 <span class="n">a</span> <span class="o">=</span> <span class="n">cubed</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">50000</span><span class="p">,</span> <span class="mi">50000</span><span class="p">),</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">5000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">),</span> <span class="n">spec</span><span class="o">=</span><span class="n">spec</span><span class="p">)</span>
 <span class="n">b</span> <span class="o">=</span> <span class="n">cubed</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">50000</span><span class="p">,</span> <span class="mi">50000</span><span class="p">),</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">5000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">),</span> <span class="n">spec</span><span class="o">=</span><span class="n">spec</span><span class="p">)</span>
@@ -423,11 +415,38 @@ document.write(`
 </div>
 <p>All arrays in any given computation must share the same <code class="docutils literal notranslate"><span class="pre">spec</span></code> instance.</p>
 </section>
+<section id="cubed-config-object">
+<h3><code class="docutils literal notranslate"><span class="pre">cubed.config</span></code> object<a class="headerlink" href="#cubed-config-object" title="Link to this heading">#</a></h3>
+<p>This way allows you to set configuration globally, or using a context manager for a block of code.</p>
+<p>The following sets the configuration globally:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cubed</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
+<span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">({</span>
+  <span class="s2">&quot;spec.work_dir&quot;</span><span class="p">:</span> <span class="s2">&quot;s3://cubed-tomwhite-temp&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;spec.allowed_mem&quot;</span><span class="p">:</span> <span class="s2">&quot;2GB&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;spec.executor_name&quot;</span><span class="p">:</span> <span class="s2">&quot;lithops&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;spec.executor_options.use_backups&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+  <span class="s2">&quot;spec.executor_options.runtime&quot;</span><span class="p">:</span> <span class="s2">&quot;cubed-runtime&quot;</span><span class="p">,</span>
+  <span class="s2">&quot;spec.executor_options.runtime_memory&quot;</span><span class="p">:</span> <span class="mi">2000</span><span class="p">,</span>
+<span class="p">})</span>
+</pre></div>
+</div>
+<p>There is no need to pass a <code class="docutils literal notranslate"><span class="pre">spec</span></code> object to array creation functions when setting configuration this way.</p>
+<p>Use a <code class="docutils literal notranslate"><span class="pre">with</span></code> statement to limit the configuration overrides to a code block:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cubed</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cubed.array_api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">xp</span>
+
+<span class="k">with</span> <span class="n">config</span><span class="o">.</span><span class="n">set</span><span class="p">({</span><span class="s2">&quot;spec.executor_name&quot;</span><span class="p">:</span> <span class="s2">&quot;single-threaded&quot;</span><span class="p">}):</span>
+  <span class="n">a</span> <span class="o">=</span> <span class="n">cubed</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">50000</span><span class="p">,</span> <span class="mi">50000</span><span class="p">),</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">5000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">))</span>
+  <span class="n">b</span> <span class="o">=</span> <span class="n">cubed</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">((</span><span class="mi">50000</span><span class="p">,</span> <span class="mi">50000</span><span class="p">),</span> <span class="n">chunks</span><span class="o">=</span><span class="p">(</span><span class="mi">5000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">))</span>
+  <span class="n">c</span> <span class="o">=</span> <span class="n">xp</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
 <section id="yaml-file">
 <h3>YAML file<a class="headerlink" href="#yaml-file" title="Link to this heading">#</a></h3>
 <p>A YAML file is a good way to encapsulate the configuration in a single file that lives outside the Python program.
 It’s a useful way to package up the settings for running using a particular executor, so it can be reused.
-The Cubed <a class="reference external" href="https://github.com/cubed-dev/cubed/blob/main/examples/README.md">examples</a> use YAML files for this reason.</p>
+The Cubed <a class="reference internal" href="examples/index.html"><span class="std std-doc">examples</span></a> use YAML files for this reason.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">spec</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">work_dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;s3://cubed-$USER-temp&quot;</span>
 <span class="w">  </span><span class="nt">allowed_mem</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2GB&quot;</span>
@@ -480,20 +499,24 @@ The Cubed <a class="reference external" href="https://github.com/cubed-dev/cubed
 <td><p>The directory path (specified as an fsspec URL) used for storing intermediate data. If not set, the user’s temporary directory is used.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">allowed_mem</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">200MB</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;2GB&quot;</span></code></p></td>
 <td><p>The total memory available to a worker for running a task. This includes any <code class="docutils literal notranslate"><span class="pre">reserved_mem</span></code> that has been set.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">reserved_mem</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">100MB</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;100MB&quot;</span></code></p></td>
 <td><p>The memory reserved on a worker for non-data use when running a task</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">executor_name</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">single-threaded</span></code></p></td>
-<td><p>The executor for running computations. One of <code class="docutils literal notranslate"><span class="pre">single-threaded</span></code>, <code class="docutils literal notranslate"><span class="pre">threads</span></code>, <code class="docutils literal notranslate"><span class="pre">processes</span></code>, <code class="docutils literal notranslate"><span class="pre">beam</span></code>, <code class="docutils literal notranslate"><span class="pre">coiled</span></code>, <code class="docutils literal notranslate"><span class="pre">dask</span></code>, <code class="docutils literal notranslate"><span class="pre">lithops</span></code>, <code class="docutils literal notranslate"><span class="pre">modal</span></code>.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;threads&quot;</span></code></p></td>
+<td><p>The executor for running computations. One of <code class="docutils literal notranslate"><span class="pre">&quot;single-threaded&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;threads&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;processes&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;beam&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;coiled&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;dask&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;lithops&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;modal&quot;</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">executor_options</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
 <td><p>Options to pass to the executor on construction. See below for possible options for each executor.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">zarr_compressor</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;default&quot;</span></code></p></td>
+<td><p>The compressor used by Zarr for intermediate data. If not specified, or set to <code class="docutils literal notranslate"><span class="pre">&quot;default&quot;</span></code>, Zarr will use the default Blosc compressor. If set to <code class="docutils literal notranslate"><span class="pre">None</span></code>, compression is disabled, which can be a good option when using local storage. Use a dictionary (or nested YAML) to configure arbitrary compression using Numcodecs.</p></td>
 </tr>
 </tbody>
 </table>
@@ -523,8 +546,8 @@ since it is deliberately designed not to have anything except the most basic fea
 <td><p>The number of times to retry a task if it fails.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">use_backups</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code></p></td>
-<td><p>Whether to use backup tasks for mitigating stragglers.</p></td>
+<td><p></p></td>
+<td><p>Whether to use backup tasks for mitigating stragglers. Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code> only if <code class="docutils literal notranslate"><span class="pre">work_dir</span></code> is a filesystem supporting atomic writes (currently a cloud store like S3 or GCS).</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">batch_size</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
@@ -553,8 +576,8 @@ since it is deliberately designed not to have anything except the most basic fea
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">use_backups</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code></p></td>
-<td><p>Whether to use backup tasks for mitigating stragglers.</p></td>
+<td><p></p></td>
+<td><p>Whether to use backup tasks for mitigating stragglers. Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code> only if <code class="docutils literal notranslate"><span class="pre">work_dir</span></code> is a filesystem supporting atomic writes (currently a cloud store like S3 or GCS).</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">batch_size</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
@@ -616,8 +639,8 @@ When running on Google Cloud Dataflow, <a class="reference external" href="https
 <td><p>The number of times to retry a task if it fails.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">use_backups</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code></p></td>
-<td><p>Whether to use backup tasks for mitigating stragglers.</p></td>
+<td><p></p></td>
+<td><p>Whether to use backup tasks for mitigating stragglers. Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code> only if <code class="docutils literal notranslate"><span class="pre">work_dir</span></code> is a filesystem supporting atomic writes (currently a cloud store like S3 or GCS).</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">batch_size</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
@@ -652,11 +675,11 @@ When running on Google Cloud Dataflow, <a class="reference external" href="https
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">timeout</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
-<td><p>Tasks that take longer than the timeout will be automatically killed and retried. Defaults to the timeout specified when <a class="reference external" href="https://lithops-cloud.github.io/docs/source/cli.html#lithops-runtime-deploy-runtime-name">deploying the lithops runtime image</a>. This is 180 seconds in the <a class="reference external" href="https://github.com/cubed-dev/cubed/blob/main/examples/README.md">examples</a>.</p></td>
+<td><p>Tasks that take longer than the timeout will be automatically killed and retried. Defaults to the timeout specified when <a class="reference external" href="https://lithops-cloud.github.io/docs/source/cli.html#lithops-runtime-deploy-runtime-name">deploying the lithops runtime image</a>. This is 180 seconds in the <a class="reference external" href="https://github.com/cubed-dev/cubed/blob/main/examples/lithops/aws/README.md">examples</a>.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">use_backups</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code></p></td>
-<td><p>Whether to use backup tasks for mitigating stragglers.</p></td>
+<td><p></p></td>
+<td><p>Whether to use backup tasks for mitigating stragglers. Defaults to <code class="docutils literal notranslate"><span class="pre">True</span></code> only if <code class="docutils literal notranslate"><span class="pre">work_dir</span></code> is a filesystem supporting atomic writes (currently a cloud store like S3 or GCS).</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">compute_arrays_in_parallel</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">False</span></code></p></td>
@@ -682,8 +705,8 @@ When running on Google Cloud Dataflow, <a class="reference external" href="https
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cloud</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">aws</span></code></p></td>
-<td><p>The cloud to run on. One of <code class="docutils literal notranslate"><span class="pre">aws</span></code> or <code class="docutils literal notranslate"><span class="pre">gcp</span></code>.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">&quot;aws&quot;</span></code></p></td>
+<td><p>The cloud to run on. One of <code class="docutils literal notranslate"><span class="pre">&quot;aws&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;gcp&quot;</span></code>.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">use_backups</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">True</span></code></p></td>
@@ -703,6 +726,14 @@ When running on Google Cloud Dataflow, <a class="reference external" href="https
 <p>Currently the Modal executor in Cubed uses a hard-coded value of 2 for retries and 300 seconds for timeouts, neither of which can be changed through configuration.</p>
 </section>
 </section>
+</section>
+<section id="debugging">
+<h2>Debugging<a class="headerlink" href="#debugging" title="Link to this heading">#</a></h2>
+<p>You can use Donfig’s <code class="docutils literal notranslate"><span class="pre">pprint</span></code> method if you want to check which configuration settings are in effect when you code is run:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">cubed</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
+<span class="n">config</span><span class="o">.</span><span class="n">pprint</span><span class="p">()</span>
+</pre></div>
+</div>
 </section>
 </section>
 
@@ -727,11 +758,11 @@ When running on Google Cloud Dataflow, <a class="reference external" href="https
       </div>
     </a>
     <a class="right-next"
-       href="related-projects.html"
+       href="why-cubed.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Related Projects</p>
+        <p class="prev-next-title">Why Cubed?</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -742,7 +773,8 @@ When running on Google Cloud Dataflow, <a class="reference external" href="https
             
             
               
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -753,6 +785,7 @@ When running on Google Cloud Dataflow, <a class="reference external" href="https
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#specification">Specification</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spec-object"><code class="docutils literal notranslate"><span class="pre">Spec</span></code> object</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cubed-config-object"><code class="docutils literal notranslate"><span class="pre">cubed.config</span></code> object</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#yaml-file">YAML file</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-variables">Environment variables</a></li>
 </ul>
@@ -772,6 +805,7 @@ When running on Google Cloud Dataflow, <a class="reference external" href="https
 </li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#debugging">Debugging</a></li>
 </ul>
   </nav></div>
 
@@ -820,8 +854,8 @@ By Tom White
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
 
   <footer class="bd-footer">
   </footer>

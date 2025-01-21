@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "cubed"
-version = "0.19.0"
+version = "0.20.0"
 authors = [
     {name = "Tom White", email = "tom.e.white@gmail.com"},
 ]
@@ -36,7 +36,7 @@ dependencies = [
     "psutil",
     "tenacity",
     "toolz",
-    "zarr < 3",
+    "zarr",
 ]
 
 [project.optional-dependencies]
@@ -53,15 +53,16 @@ diagnostics = [
 beam = ["apache-beam", "gcsfs"]
 dask = ["dask < 2024.12.0"]
 dask-distributed = ["distributed < 2024.12.0"]
-lithops = ["lithops[aws] >= 2.7.0"]
+icechunk = ["icechunk"]
+lithops = ["lithops[aws] >= 3.3.0"]
 lithops-aws = [
     "cubed[diagnostics]",
-    "lithops[aws]",
+    "lithops[aws] >= 3.3.0",
     "s3fs",
 ]
 lithops-gcp = [
     "cubed[diagnostics]",
-    "lithops[gcp]",
+    "lithops[gcp] >= 3.3.0",
     "gcsfs",
 ]
 modal = [
@@ -89,6 +90,15 @@ test = [
     "pytest-mock",
 ]
 
+test-jax = [
+    "cubed[diagnostics]",
+    "dill",
+    "numpy_groupies",
+    "pytest",
+    "pytest-cov",
+    "pytest-mock",
+    "jax",
+]
 [project.urls]
 homepage = "https://github.com/cubed-dev/cubed"
 documentation = "https://tomwhite.github.io/cubed"

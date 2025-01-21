@@ -16,7 +16,7 @@ from cubed.backend_array_api import (
     numpy_array_to_backend_array,
 )
 from cubed.runtime.types import CubedPipeline
-from cubed.storage.zarr import T_ZarrArray, lazy_zarr_array
+from cubed.storage.zarr import LazyZarrArray, T_ZarrArray, lazy_zarr_array
 from cubed.types import T_Chunks, T_DType, T_Shape, T_Store
 from cubed.utils import array_memory, chunk_memory, get_item, map_nested
 from cubed.utils import numblocks as compute_numblocks
@@ -72,9 +72,12 @@ class BlockwiseSpec:
     iterable_input_blocks: Tuple[bool, ...]
     reads_map: Dict[str, CubedArrayProxy]
     writes_list: List[CubedArrayProxy]
+    return_writes_stores: bool = False
 
 
-def apply_blockwise(out_coords: List[int], *, config: BlockwiseSpec) -> None:
+def apply_blockwise(
+    out_coords: List[int], *, config: BlockwiseSpec
+) -> Optional[List[T_Store]]:
     """Stage function for blockwise."""
     # lithops needs params to be lists not tuples, so convert back
     out_coords_tuple = tuple(out_coords)
@@ -99,6 +102,10 @@ def apply_blockwise(out_coords: List[int], *, config: BlockwiseSpec) -> None:
         else:
             result = backend_array_to_numpy_array(result)
             config.writes_list[i].open()[out_chunk_key] = result
+
+    if config.return_writes_stores:
+        return [write_proxy.open().store for write_proxy in config.writes_list]
+    return None
 
 
 def get_results_in_different_scope(out_coords: List[int], *, config: BlockwiseSpec):
@@ -267,6 +274,7 @@ def general_blockwise(
     function_nargs: Optional[int] = None,
     num_input_blocks: Optional[Tuple[int, ...]] = None,
     iterable_input_blocks: Optional[Tuple[bool, ...]] = None,
+    return_writes_stores: bool = False,
     **kwargs,
 ) -> PrimitiveOperation:
     """A more general form of ``blockwise`` that uses a function to specify the block
@@ -321,7 +329,7 @@ def general_blockwise(
 
     write_proxies = []
     output_chunk_memory = 0
-    target_array = []
+    target_arrays = []
 
     numblocks0 = None
     for i, target_store in enumerate(target_stores):
@@ -335,6 +343,7 @@ def general_blockwise(
                 raise ValueError(
                     f"All outputs must have matching number of blocks in each dimension. Chunks specified: {chunkss}"
                 )
+        ta: Union[zarr.Array, LazyZarrArray]
         if isinstance(target_store, zarr.Array):
             ta = target_store
         else:
@@ -347,7 +356,7 @@ def general_blockwise(
                 storage_options=storage_options,
                 compressor=compressor,
             )
-        target_array.append(ta)
+        target_arrays.append(ta)
 
         write_proxies.append(CubedArrayProxy(ta, chunksize))
 
@@ -355,9 +364,6 @@ def general_blockwise(
         output_chunk_memory = max(
             output_chunk_memory, array_memory(dtypes[i], chunksize) * 2
         )
-
-    if len(target_array) == 1:
-        target_array = target_array[0]
 
     spec = BlockwiseSpec(
         key_function,
@@ -367,6 +373,7 @@ def general_blockwise(
         iterable_input_blocks,
         read_proxies,
         write_proxies,
+        return_writes_stores,
     )
 
     # calculate projected memory
@@ -404,7 +411,7 @@ def general_blockwise(
     return PrimitiveOperation(
         pipeline=pipeline,
         source_array_names=array_names,
-        target_array=target_array,
+        target_array=target_arrays[0] if len(target_arrays) == 1 else target_arrays,
         projected_mem=projected_mem,
         allowed_mem=allowed_mem,
         reserved_mem=reserved_mem,
@@ -536,6 +543,7 @@ def fuse(
     function_nargs = pipeline1.config.function_nargs
     read_proxies = pipeline1.config.reads_map
     write_proxies = pipeline2.config.writes_list
+    return_writes_stores = pipeline2.config.return_writes_stores
     num_input_blocks = tuple(
         n * pipeline2.config.num_input_blocks[0]
         for n in pipeline1.config.num_input_blocks
@@ -549,6 +557,7 @@ def fuse(
         iterable_input_blocks,
         read_proxies,
         write_proxies,
+        return_writes_stores,
     )
 
     source_array_names = primitive_op1.source_array_names
@@ -681,6 +690,7 @@ def fuse_blockwise_specs(
     for bws in predecessor_bw_specs:
         read_proxies.update(bws.reads_map)
     write_proxies = bw_spec.writes_list
+    return_writes_stores = bw_spec.return_writes_stores
     return BlockwiseSpec(
         fused_key_func,
         fused_func,
@@ -689,6 +699,7 @@ def fuse_blockwise_specs(
         fused_iterable_input_blocks,
         read_proxies,
         write_proxies,
+        return_writes_stores,
     )
 
 
